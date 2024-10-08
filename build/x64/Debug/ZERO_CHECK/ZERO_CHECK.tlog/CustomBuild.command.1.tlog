@@ -1,0 +1,10 @@
+^C:\PROGRAMMING\JPP\BUILD\CMAKEFILES\4AAD07D6CA8BC9F14D8187150D2850F9\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Programming/jpp -BC:/Programming/jpp/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Programming/jpp/build/jpp.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

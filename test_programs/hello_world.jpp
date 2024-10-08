@@ -1,0 +1,6 @@
+
+
+main() -> uint8{
+
+    return 0;
+}
