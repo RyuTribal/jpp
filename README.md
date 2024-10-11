@@ -8,6 +8,7 @@
   - [Windows](#windows)
   - [Linux](#linux)
 - [Build Scripts](#build-scripts)
+- [Using the Compiler](#using-the-compiler)
 
 ## Overview
 
