@@ -4,33 +4,6 @@
 #include <string.h>
 #include "log.h"
 
-#define LEXEME_MAX_SIZE 256
-
-typedef enum Token
-{
-    TOKEN_KEYWORD,
-    TOKEN_IDENTIFIER,
-    TOKEN_NUMBER_LITERAL,
-    TOKEN_ARROW,
-    TOKEN_LPAREN,
-    TOKEN_RPAREN,
-    TOKEN_LBRACE,
-    TOKEN_RBRACE,
-    TOKEN_TYPE,
-    TOKEN_RETURN,
-    TOKEN_COMMA,
-    TOKEN_SEMICOLON,
-    TOKEN_EOF,
-    TOKEN_UNKNOWN
-} Token;
-
-typedef struct
-{
-    Token type;
-    char lexeme[LEXEME_MAX_SIZE];
-    int line;
-} TokenData;
-
 TokenData get_next_token(char **input, uint64_t line_number)
 {
     TokenData token;
@@ -48,7 +21,6 @@ TokenData get_next_token(char **input, uint64_t line_number)
         token.type = TOKEN_EOF;
         return token;
     }
-
     if (isalpha(**input))
     {
         int i = 0;
@@ -58,22 +30,23 @@ TokenData get_next_token(char **input, uint64_t line_number)
             (*input)++;
         }
         token.lexeme[i] = '\0';
-
         if (strcmp(token.lexeme, "return") == 0)
         {
             token.type = TOKEN_RETURN;
+            log_message(LOG_LEVEL_TRACE, "Recognized 'return' keyword");
         }
         else if (strcmp(token.lexeme, "uint8") == 0)
         {
             token.type = TOKEN_TYPE;
+            log_message(LOG_LEVEL_TRACE, "Recognized 'uint8' type");
         }
         else
         {
             token.type = TOKEN_IDENTIFIER;
+            log_message(LOG_LEVEL_TRACE, "Recognized identifier: %s", token.lexeme);
         }
         return token;
     }
-
     if (isdigit(**input))
     {
         int i = 0;
@@ -84,10 +57,9 @@ TokenData get_next_token(char **input, uint64_t line_number)
         }
         token.lexeme[i] = '\0';
         token.type = TOKEN_NUMBER_LITERAL;
+        log_message(LOG_LEVEL_TRACE, "Recognized number literal: %s", token.lexeme);
         return token;
     }
-
-    // Handle operators and punctuation
     switch (**input)
     {
     case '(':
@@ -111,12 +83,6 @@ TokenData get_next_token(char **input, uint64_t line_number)
     case '}':
         token.type = TOKEN_RBRACE;
         token.lexeme[0] = '}';
-        token.lexeme[1] = '\0';
-        (*input)++;
-        break;
-    case ',':
-        token.type = TOKEN_COMMA;
-        token.lexeme[0] = ',';
         token.lexeme[1] = '\0';
         (*input)++;
         break;
@@ -145,6 +111,7 @@ TokenData get_next_token(char **input, uint64_t line_number)
         break;
     }
 
+    log_message(LOG_LEVEL_TRACE, "Returning token: %s (type: %d)", token.lexeme, token.type);
     return token;
 }
 
@@ -154,7 +121,6 @@ void tokenize_line(char *line, uint64_t line_number)
 
     while (*input != '\0')
     {
-        // Get the next token
         TokenData token_data = get_next_token(&input, line_number);
 
         if (token_data.type == TOKEN_UNKNOWN)
@@ -191,8 +157,6 @@ int Lexer_build_from_file(char *file)
 
         tokenize_line(line_buffer, line);
     }
-
-    // Close the file after reading
     fclose(file_ptr);
     return EXIT_SUCCESS;
 }

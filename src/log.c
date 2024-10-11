@@ -11,7 +11,8 @@
 
 static LoggerConfig log_config = {LOG_LEVEL_TRACE};
 
-void get_timestamp(char *buffer, size_t size){
+void get_timestamp(char *buffer, size_t size)
+{
     time_t now = time(NULL);
     struct tm *t = localtime(&now);
     if (t == NULL)
@@ -23,7 +24,8 @@ void get_timestamp(char *buffer, size_t size){
     strftime(buffer, size, "%Y-%m-%d %H:%M:%S", t);
 }
 
-uint8_t init_logger(LogLevel level){
+uint8_t init_logger(LogLevel level)
+{
 #ifdef _WIN32
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hOut == INVALID_HANDLE_VALUE)
@@ -40,11 +42,13 @@ uint8_t init_logger(LogLevel level){
     return 1;
 }
 
-void set_logger_level(LogLevel level){
+void set_logger_level(LogLevel level)
+{
     log_config.level = level;
 }
 
-void log_message(LogLevel level, const char *format, ...){
+void log_message(LogLevel level, const char *format, ...)
+{
     if (level < log_config.level)
         return;
 
@@ -58,7 +62,7 @@ void log_message(LogLevel level, const char *format, ...){
     {
     case LOG_LEVEL_TRACE:
         color = BLUE;
-        level_str = "DEBUG";
+        level_str = "TRACE";
         break;
     case LOG_LEVEL_INFO:
         color = GREEN;
